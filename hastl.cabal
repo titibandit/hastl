@@ -1,0 +1,123 @@
+cabal-version:      3.6
+name:               hastl
+version:            0.1.0.0
+-- synopsis:
+-- description:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             sig
+maintainer:         sig@eldr.io
+-- copyright:
+category:           Web
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  
+        Config
+      , Init
+      , Models
+      , Api
+      , Api.User
+      , Api.Base
+      , Api.Templates.User.User
+      , Api.Templates.Base.Footer
+      , Api.Templates.Base.Header
+      , Api.Templates.Base.Home
+      , Api.Templates.Base.About
+      , Api.Templates.Helpers.Htmx
+      , Api.Templates.Helpers.Alpine
+      , Api.Templates.Helpers.Icons
+      , Logger
+      , DevelMain
+    default-extensions:
+      OverloadedStrings
+    build-depends:    
+      katip == 0.8.8.0, 
+      aeson >= 2.2.2 && < 2.3,
+      base ^>= {4.17.2, 4.18.2, 4.19},
+      containers >= 0.6.7 && < 0.7,
+      random >= 1.2.1 && < 1.3,
+      bytestring >= 0.11.5 && < 0.12,
+      mtl ^>= {2.2.2, 2.3.1},
+      transformers ^>= {0.5.6, 0.6.1},
+      text >= 2.0.2 && < 2.2,
+      unordered-containers >= 0.2.20 && < 0.3,
+      time >= 1.12.2 && < 1.13,
+      dani-servant-lucid2 >= 0.1.0 && < 0.2,
+      lucid2 >= 0.0.20240424 && < 0.1,
+      servant >= 0.20.1 && < 0.21,
+      servant-server >= 0.20 && < 0.21,
+      monad-control >= 1.0.3 && < 1.1,
+      wai >= 3.2.4 && < 3.3,
+      wai-extra >= 3.1.15 && < 3.2,
+      fast-logger >= 3.2.3 && < 3.3,
+      warp >= 3.4.1 && < 3.5,
+      safe-exceptions >= 0.1.7 && < 0.2,
+      foreign-store >= 0.2.1 && < 0.3,
+      microlens >= 0.4.13 && < 0.5,
+      monad-logger >= 0.3.40 && < 0.4,
+      monad-metrics >= 0.2.2 && < 0.3,
+      persistent >= 2.14.6 && < 2.15,
+      resource-pool >= 0.4.0 && < 0.5,
+      persistent-postgresql >= 2.13.6 && < 2.14,
+      persistent-template >= 2.12.0 && < 2.13,
+      safe >= 0.3.21 && < 0.4,
+      say >= 0.1.0 && < 0.2,
+      wai-middleware-metrics >= 0.2.4 && < 0.3,
+    hs-source-dirs:   lib
+    default-language: GHC2021
+
+executable hastl
+    import:           warnings
+    main-is:          Main.hs
+    -- other-modules:
+    -- other-extensions:
+    build-depends:
+        base ^>= {4.17.2, 4.18.2, 4.19},
+        hastl
+
+    hs-source-dirs:   app
+    default-language: GHC2021
+
+test-suite hastl-test
+    import:           warnings
+    default-language: GHC2021
+    other-modules:
+      Api.UserSpec
+    default-extensions:
+      OverloadedStrings
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-tool-depends: hspec-discover:hspec-discover
+    build-depends:
+        base ^>= {4.17.2, 4.18.2, 4.19}
+      , hastl
+      , hspec
+      , persistent-postgresql
+      , time
+    ghc-options:
+        -threaded -rtsopts -with-rtsopts=-N -fwarn-unused-imports
+
+test-suite hastl-test-integration
+    import:           warnings
+    default-language: GHC2021
+    default-extensions:
+      OverloadedStrings
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test-integration
+    main-is:          Main.hs
+    other-modules: TestHttpSpec
+    build-depends:
+        base ^>= {4.17.2, 4.18.2, 4.19},
+        hastl,
+        hspec,
+        testcontainers,
+        http-client,
+        http-conduit
